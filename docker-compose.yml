@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  pulsar:
+    image: apachepulsar/pulsar:3.1.2
+    container_name: pulsar-standalone
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+      - "8081:8081" # Prometheus metrics
+    environment:
+      - PULSAR_MEM=" -Xms512m -Xmx512m -XX:MaxDirectMemorySize=512m"
+      - PULSAR_STANDALONE_USE_ZOOKEEPER=true # Added for Pulsar 2.x versions, ensure it's appropriate for 3.1.2 or remove if not
+      - PULSAR_PREFIX_brokerPrometheusMetricsPort=8081
+      - PULSAR_FUNCTIONS_WORKER_ENABLED=true # Default in standalone, but explicit
+    volumes:
+      - pulsar_data:/pulsar/data
+      - pulsar_conf:/pulsar/conf
+      - pulsar_logs:/pulsar/logs
+
+  localstack:
+    image: localstack/localstack:latest # Using latest, consider pinning to a specific version for stability
+    container_name: localstack
+    ports:
+      - "4566:4566"       # Edge service
+    environment:
+      - SERVICES=kinesis,sts,iam # Specify services, add others if needed e.g. s3
+      - DEFAULT_REGION=us-east-1
+      - DEBUG=${DEBUG:-0} # Optional: enable debug logs for LocalStack
+      # - DATA_DIR=/tmp/localstack/data # Optional: for persistence, if volume is mounted
+    volumes:
+      - localstack_data:/var/lib/localstack # Persist LocalStack data
+      # - "/var/run/docker.sock:/var/run/docker.sock" # Optional: if LocalStack needs to start other containers
+
+volumes:
+  pulsar_data: {}
+  pulsar_conf: {}
+  pulsar_logs: {}
+  localstack_data: {} # Volume for LocalStack data

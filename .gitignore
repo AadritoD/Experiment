@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.env
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+
+# LocalStack
+.localstack/
+
+# Pulsar
+data/
+conf/
+logs/
+
+# Benchmarking
+results/*
+!results/.gitkeep

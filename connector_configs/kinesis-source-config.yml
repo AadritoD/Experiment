@@ -1,0 +1,39 @@
+# Pulsar Kinesis Source Connector Configuration for LocalStack
+# This file will be used by the Pulsar IO Kinesis Source Connector.
+# Values like streamName, awsEndpoint, awsRegion, etc., should ideally
+# align with your .env file or be directly sourced if the connector supports env var substitution.
+# For this iteration, we'll use placeholders that match the .env file's intent.
+
+# AWS Specific Configuration
+awsEndpoint: "http://localstack:4566" # Docker service name for LocalStack
+awsRegion: "us-east-1"               # As defined in .env
+streamName: "pulsar-test-stream"     # As defined in KINESIS_STREAM_NAME in .env
+awsAccessKeyId: "test"               # Dummy credential from .env
+awsSecretAccessKey: "test"           # Dummy credential from .env
+
+# Kinesis Consumer Configuration
+initialPositionInStream: "LATEST"    # "LATEST" or "TRIM_HORIZON"
+# applicationName: "pulsar-kinesis-source-local" # Can be useful for KCL coordination if using KCL directly or advanced features
+# checkpointInterval: 30000          # In milliseconds, how often to checkpoint progress
+# backoffStrategy: "Exponential"     # "Exponential", "Linear", "Fixed"
+# retryAttempts: 10                  # Number of retries for AWS SDK calls
+
+# Pulsar Specific Configuration
+# The destination topic is usually set during the 'sources create' command,
+# but some connectors might allow it here. We will set it via CLI.
+# topicName: "persistent://public/default/kinesis-raw-xml" # Matches RAW_XML_TOPIC from .env
+
+# Schema Information (if you want the connector to apply a schema)
+# type: "BYTES" # or "JSON", "AVRO", etc. For XML, BYTES is appropriate as transformation is done by a Pulsar Function.
+
+# Optional: CloudWatch configuration if you were to send metrics to LocalStack's CloudWatch
+# cloudwatchEndpoint: "http://localstack:4566"
+# cloudwatchEmfEnabled: false # For Embedded Message Format
+
+# Optional: Enhanced Fan-Out (not typically used with basic LocalStack unless specifically configured)
+# useEnhancedFanOut: false
+# consumerArn: "" # Required if useEnhancedFanOut is true
+
+# Optional: Proxy settings if your Pulsar worker needs a proxy to reach LocalStack (not usually needed in Docker bridge network)
+# httpsProxyHost: ""
+# httpsProxyPort: ""
